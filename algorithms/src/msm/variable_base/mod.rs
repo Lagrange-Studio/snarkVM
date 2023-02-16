@@ -19,6 +19,8 @@ pub mod standard;
 
 #[cfg(all(feature = "cuda", target_arch = "x86_64"))]
 mod cuda;
+#[cfg(all(feature = "cuda", target_arch = "x86_64"))]
+mod opencl;
 
 #[cfg(target_arch = "x86_64")]
 pub mod prefetch;
@@ -135,7 +137,7 @@ mod tests {
         let (bases, scalars) = create_scalar_bases::<G1Affine, Fr>(&mut rng, test_size);
 
         let cpu = standard::msm(bases.as_slice(), scalars.as_slice());
-        let cuda = cuda::msm_cuda(bases.as_slice(), scalars.as_slice()).unwrap();
+        let cuda = opencl::msm_opencl(bases.as_slice(), scalars.as_slice()).unwrap();
         assert_eq!(cpu, cuda);
     }
 }
