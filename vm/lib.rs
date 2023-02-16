@@ -84,3 +84,5 @@ pub mod prelude {
     #[cfg(feature = "utilities")]
     pub use crate::utilities::*;
 }
+
+pub use snarkvm_algorithms::{create_scalar_bases, Fr, G1Affine};
