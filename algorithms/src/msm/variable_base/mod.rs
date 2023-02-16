@@ -125,4 +125,17 @@ mod tests {
             assert_eq!(rust, cuda);
         }
     }
+
+    #[cfg(all(feature = "cuda", target_arch = "x86_64"))]
+    #[test]
+    fn test_msm_opencl() {
+        let mut rng = TestRng::default();
+        let test_size = 1000;
+
+        let (bases, scalars) = create_scalar_bases::<G1Affine, Fr>(&mut rng, test_size);
+
+        let cpu = standard::msm(bases.as_slice(), scalars.as_slice());
+        let cuda = cuda::msm_cuda(bases.as_slice(), scalars.as_slice()).unwrap();
+        assert_eq!(cpu, cuda);
+    }
 }
