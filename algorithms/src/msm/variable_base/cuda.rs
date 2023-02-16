@@ -29,9 +29,9 @@ use std::{any::TypeId, path::Path, process::Command};
 use rayon::prelude::*;
 
 pub struct CudaRequest {
-    bases: Vec<G1Affine>,
-    scalars: Vec<Fr>,
-    response: crossbeam_channel::Sender<Result<G1Projective, GPUError>>,
+    pub bases: Vec<G1Affine>,
+    pub scalars: Vec<Fr>,
+    pub response: crossbeam_channel::Sender<Result<G1Projective, GPUError>>,
 }
 
 struct CudaContext {
