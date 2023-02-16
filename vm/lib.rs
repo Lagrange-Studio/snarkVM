@@ -86,3 +86,4 @@ pub mod prelude {
 }
 
 pub use snarkvm_algorithms::{create_scalar_bases, Fr, G1Affine, TestRng};
+pub use snarkvm_algorithms::msm::variable_base::{cuda, standard as cpu};

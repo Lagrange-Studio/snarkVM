@@ -18,7 +18,7 @@ pub mod batched;
 pub mod standard;
 
 #[cfg(all(feature = "cuda", target_arch = "x86_64"))]
-mod cuda;
+pub mod cuda;
 #[cfg(all(feature = "cuda", target_arch = "x86_64"))]
 mod opencl;
 
