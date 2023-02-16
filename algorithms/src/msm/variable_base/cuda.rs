@@ -278,7 +278,7 @@ fn handle_cuda_request(context: &mut CudaContext, request: &CudaRequest) -> Resu
 }
 
 /// Initialize the cuda request handler.
-fn initialize_cuda_request_handler(input: crossbeam_channel::Receiver<CudaRequest>) {
+pub fn initialize_cuda_request_handler(input: crossbeam_channel::Receiver<CudaRequest>) {
     match load_cuda_program() {
         Ok(program) => {
             let num_groups = (SCALAR_BITS + BIT_WIDTH - 1) / BIT_WIDTH;
