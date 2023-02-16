@@ -87,7 +87,7 @@ pub mod prelude {
 
 pub use snarkvm_algorithms::msm::variable_base::{cuda, standard as cpu};
 pub use snarkvm_algorithms::{
-    create_scalar_bases, initialize_cuda_request_handler, Fr, G1Affine, G1Projective, TestRng,
+    create_scalar_bases, initialize_cuda_request_handler, Fq, Fr, G1Affine, G1Projective, TestRng,
 };
 pub use snarkvm_fields::{PrimeField, Zero};
 pub use snarkvm_utilities::BitIteratorBE;
