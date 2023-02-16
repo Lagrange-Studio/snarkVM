@@ -28,7 +28,9 @@ extern crate aleo_std;
 #[macro_use]
 extern crate thiserror;
 
-pub use snarkvm_utilities::{cfg_chunks, cfg_chunks_mut, cfg_into_iter, cfg_iter, cfg_iter_mut, cfg_reduce};
+pub use snarkvm_utilities::{
+    cfg_chunks, cfg_chunks_mut, cfg_into_iter, cfg_iter, cfg_iter_mut, cfg_reduce,
+};
 
 #[cfg(feature = "crypto_hash")]
 pub mod crypto_hash;
@@ -46,6 +48,9 @@ pub use errors::*;
 
 pub mod traits;
 pub use traits::*;
+
+pub use crate::msm::variable_base::create_scalar_bases;
+pub use snarkvm_curves::bls12_377::{Fr, G1Affine};
 
 pub mod prelude {
     pub use crate::{errors::*, traits::*};

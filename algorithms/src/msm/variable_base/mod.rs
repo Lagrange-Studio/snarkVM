@@ -39,7 +39,10 @@ static HAS_CUDA_FAILED: AtomicBool = AtomicBool::new(false);
 pub struct VariableBase;
 
 impl VariableBase {
-    pub fn msm<G: AffineCurve>(bases: &[G], scalars: &[<G::ScalarField as PrimeField>::BigInteger]) -> G::Projective {
+    pub fn msm<G: AffineCurve>(
+        bases: &[G],
+        scalars: &[<G::ScalarField as PrimeField>::BigInteger],
+    ) -> G::Projective {
         // For BLS12-377, we perform variable base MSM using a batched addition technique.
         if TypeId::of::<G>() == TypeId::of::<G1Affine>() {
             #[cfg(all(feature = "cuda", target_arch = "x86_64"))]
@@ -61,11 +64,18 @@ impl VariableBase {
     }
 
     #[cfg(test)]
-    fn msm_naive<G: AffineCurve>(bases: &[G], scalars: &[<G::ScalarField as PrimeField>::BigInteger]) -> G::Projective {
+    fn msm_naive<G: AffineCurve>(
+        bases: &[G],
+        scalars: &[<G::ScalarField as PrimeField>::BigInteger],
+    ) -> G::Projective {
         use itertools::Itertools;
         use snarkvm_utilities::BitIteratorBE;
 
-        bases.iter().zip_eq(scalars).map(|(base, scalar)| base.mul_bits(BitIteratorBE::new(*scalar))).sum()
+        bases
+            .iter()
+            .zip_eq(scalars)
+            .map(|(base, scalar)| base.mul_bits(BitIteratorBE::new(*scalar)))
+            .sum()
     }
 
     #[cfg(test)]
@@ -76,8 +86,24 @@ impl VariableBase {
         use rayon::prelude::*;
         use snarkvm_utilities::BitIteratorBE;
 
-        bases.par_iter().zip_eq(scalars).map(|(base, scalar)| base.mul_bits(BitIteratorBE::new(*scalar))).sum()
+        bases
+            .par_iter()
+            .zip_eq(scalars)
+            .map(|(base, scalar)| base.mul_bits(BitIteratorBE::new(*scalar)))
+            .sum()
     }
+}
+
+use snarkvm_utilities::rand::TestRng;
+pub fn create_scalar_bases<G: AffineCurve<ScalarField = F>, F: PrimeField>(
+    rng: &mut TestRng,
+    size: usize,
+) -> (Vec<G>, Vec<F::BigInteger>) {
+    let bases = (0..size).map(|_| G::rand(rng)).collect::<Vec<_>>();
+    let scalars = (0..size)
+        .map(|_| F::rand(rng).to_bigint())
+        .collect::<Vec<_>>();
+    (bases, scalars)
 }
 
 #[cfg(test)]
@@ -92,7 +118,9 @@ mod tests {
         size: usize,
     ) -> (Vec<G>, Vec<F::BigInteger>) {
         let bases = (0..size).map(|_| G::rand(rng)).collect::<Vec<_>>();
-        let scalars = (0..size).map(|_| F::rand(rng).to_bigint()).collect::<Vec<_>>();
+        let scalars = (0..size)
+            .map(|_| F::rand(rng).to_bigint())
+            .collect::<Vec<_>>();
         (bases, scalars)
     }
 
@@ -104,7 +132,8 @@ mod tests {
             let (bases, scalars) = create_scalar_bases::<G1Affine, Fr>(&mut rng, msm_size);
 
             let naive_a = VariableBase::msm_naive(bases.as_slice(), scalars.as_slice()).to_affine();
-            let naive_b = VariableBase::msm_naive_parallel(bases.as_slice(), scalars.as_slice()).to_affine();
+            let naive_b =
+                VariableBase::msm_naive_parallel(bases.as_slice(), scalars.as_slice()).to_affine();
             assert_eq!(naive_a, naive_b, "MSM size: {msm_size}");
 
             let candidate = standard::msm(bases.as_slice(), scalars.as_slice()).to_affine();
