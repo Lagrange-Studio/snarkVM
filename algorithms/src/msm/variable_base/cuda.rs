@@ -316,7 +316,7 @@ lazy_static::lazy_static! {
 }
 
 #[allow(clippy::transmute_undefined_repr)]
-pub(super) fn msm_cuda<G: AffineCurve>(
+pub fn msm_cuda<G: AffineCurve>(
     mut bases: &[G],
     mut scalars: &[<G::ScalarField as PrimeField>::BigInteger],
 ) -> Result<G::Projective, GPUError> {
