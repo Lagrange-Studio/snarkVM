@@ -95,6 +95,7 @@ full = [
   "r1cs",
   "synthesizer",
   "utilities",
+  "setup"
 ]
 cli = [
   "anyhow",
@@ -126,6 +127,7 @@ r1cs = ["snarkvm-r1cs"]
 synthesizer = ["snarkvm-synthesizer"]
 utilities = ["snarkvm-utilities"]
 wasm = ["snarkvm-wasm"]
+setup = ["snarkvm-synthesizer/setup"]
 
 [dependencies.snarkvm-algorithms]
 path = "./algorithms"
